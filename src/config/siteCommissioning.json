@@ -1,0 +1,139 @@
+{
+  "id": "site-commissioning",
+  "version": "1.0.0",
+  "title": "Site Commissioning Form",
+  "sections": [
+    {
+      "id": "construction",
+      "title": "A — Construction",
+      "fields": [
+        {
+          "id": "contractorMobilisedDate",
+          "type": "date",
+          "label": "Contractor Mobilised Date",
+          "required": true,
+          "validation": [
+            { "type": "noFuture", "message": "Date cannot be in the future" }
+          ]
+        },
+        {
+          "id": "solarFoundationStart",
+          "type": "date",
+          "label": "Solar Foundation — Start Date",
+          "required": true,
+          "validation": [
+            { "type": "noFuture", "message": "Date cannot be in the future" },
+            { "type": "gte", "field": "contractorMobilisedDate", "message": "Start cannot be earlier than Contractor Mobilised date" }
+          ]
+        },
+        {
+          "id": "solarFoundationEnd",
+          "type": "date",
+          "label": "Solar Foundation — End Date",
+          "required": true,
+          "validation": [
+            { "type": "noFuture", "message": "Date cannot be in the future" },
+            { "type": "gte", "field": "solarFoundationStart", "message": "End cannot be earlier than Start date" }
+          ]
+        },
+        {
+          "id": "earthingWorks",
+          "type": "toggle",
+          "label": "Earthing Works",
+          "required": true
+        },
+        {
+          "id": "earthingType",
+          "type": "select",
+          "label": "Type of Earthing",
+          "options": ["Chemical", "Pipe", "Spike"],
+          "required": true,
+          "visibleWhen": { "field": "earthingWorks", "equals": "yes" }
+        },
+        {
+          "id": "earthingNos",
+          "type": "select",
+          "label": "Earthing Nos",
+          "options": ["1", "2", "3"],
+          "required": true,
+          "visibleWhen": { "field": "earthingWorks", "equals": "yes" }
+        }
+      ],
+      "photos": [
+        {
+          "group": "Earthing",
+          "dynamicFrom": "earthingNos",
+          "slotPrefix": "EP",
+          "visibleWhen": { "field": "earthingWorks", "equals": "yes" }
+        }
+      ]
+    },
+    {
+      "id": "utility",
+      "title": "B — Utility Installation",
+      "fields": [
+        {
+          "id": "essInstalled",
+          "type": "toggle",
+          "label": "ESS Installed",
+          "required": true
+        },
+        {
+          "id": "noOfESS",
+          "type": "select",
+          "label": "No of ESS Installed",
+          "options": ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+          "required": true,
+          "visibleWhen": { "field": "essInstalled", "equals": "yes" }
+        },
+        {
+          "id": "essUnits",
+          "type": "repeat",
+          "countField": "noOfESS",
+          "itemLabel": "ESS",
+          "visibleWhen": { "field": "essInstalled", "equals": "yes" },
+          "fields": [
+            { "id": "essMake", "type": "text", "label": "Make", "required": true },
+            { "id": "essSerial", "type": "text", "label": "Serial No", "required": true }
+          ]
+        },
+        {
+          "id": "panelCapacity",
+          "type": "select",
+          "label": "Panel Capacity (W)",
+          "options": ["575", "580", "585", "590", "600"],
+          "required": true
+        },
+        {
+          "id": "numberOfPanels",
+          "type": "number",
+          "label": "Number of Solar Panels",
+          "required": true
+        },
+        {
+          "id": "solarPVCapacity",
+          "type": "computed",
+          "label": "Solar PV Capacity (kW)",
+          "formula": "panelCapacity * numberOfPanels / 1000",
+          "precision": 2,
+          "readOnly": true
+        }
+      ]
+    },
+    {
+      "id": "photos",
+      "title": "C — Photos",
+      "fields": [],
+      "photos": [
+        {
+          "group": "Foundation",
+          "slots": ["Excavation", "Steel Binding", "Raft / Column", "Bolts / Pedestal"]
+        },
+        {
+          "group": "Structure",
+          "slots": ["Front", "Side"]
+        }
+      ]
+    }
+  ]
+}
